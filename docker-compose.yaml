@@ -1,0 +1,27 @@
+services:
+  db:
+    container_name: ${DB_HOST}
+    image: bitnami/postgresql:17.4.0
+    environment:
+      - POSTGRESQL_USERNAME=${DB_USER}
+      - POSTGRESQL_PASSWORD=${DB_PASS}
+      - POSTGRESQL_DATABASE=${DB_NAME}
+    ports:
+      - "5432:${DB_PORT}"
+
+  backend:
+    container_name: backend-api
+    build: ./
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
+      - API_SECURITY_TOKEN_SECRET=${API_SECURITY_TOKEN_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+
+
