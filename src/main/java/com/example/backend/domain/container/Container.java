@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "containers")
@@ -36,7 +37,7 @@ public class Container {
     private int exposedPort;
 
     @OneToMany(mappedBy = "container", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnvironmentVariable> environmentVariables;
+    private List<EnvironmentVariable> environmentVariables = new ArrayList<>();;
 
     public void addEnvironmentVariable(EnvironmentVariable environmentVariable) {
         if (environmentVariable == null) {

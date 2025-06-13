@@ -23,7 +23,7 @@ build-image:
 deploy: build build-image up
 
 sql:
-	docker compose exec db psql --username ${DB_USER} --password ${DB_PASS} -d db
+	docker compose exec db psql --username ${DB_USER} --password -d ${DB_NAME}
 
 ps:
 	docker compose ps
