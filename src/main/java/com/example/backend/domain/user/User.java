@@ -1,6 +1,7 @@
 package com.example.backend.domain.user;
 
 import com.example.backend.domain.comment.Comment;
+import com.example.backend.domain.container.Container;
 import com.example.backend.domain.response.Response;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -35,6 +36,9 @@ public class User {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Response> responses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Container> containers = new ArrayList<>();
 
     public void addComment(Comment comment) {
         comment.setUser(this);
