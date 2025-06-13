@@ -5,12 +5,9 @@ import com.example.backend.domain.container.Container;
 import com.example.backend.domain.container.EnvironmentVariable;
 import com.example.backend.domain.response.Response;
 import com.example.backend.domain.user.User;
-import com.example.backend.repositories.CommentRepository;
-import com.example.backend.repositories.ResponseRepository;
-import com.example.backend.repositories.UserRepository;
+import com.example.backend.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,6 +22,10 @@ public class DataLoader implements CommandLineRunner {
     CommentRepository commentRepository;
     @Autowired
     ResponseRepository responseRepository;
+    @Autowired
+    ContainerRepository containerRepository;
+    @Autowired
+    EnvironmentVariableRepository environmentVariableRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -35,7 +36,13 @@ public class DataLoader implements CommandLineRunner {
 
     private void loadData() {
         // if database is empty seed database
-        if (userRepository.count() != 0 || commentRepository.count() != 0 || responseRepository.count() != 0) {
+        if (
+                userRepository.count() != 0 ||
+                commentRepository.count() != 0 ||
+                responseRepository.count() != 0 ||
+                containerRepository.count() != 0 ||
+                environmentVariableRepository.count() != 0
+        ) {
             return;
         }
 
@@ -47,8 +54,8 @@ public class DataLoader implements CommandLineRunner {
 
         User user2 = new User();
         user2.setUserPhotoLink("https://github.com/PedroJoga.png");
-        user2.setUsername("joao");
-        user2.setEmail("joao@mail.com");
+        user2.setUsername("joel");
+        user2.setEmail("joel@mail.com");
         user2.setPassword(passwordEncoder.encode("123"));
 
         userRepository.save(user1);
@@ -122,13 +129,15 @@ public class DataLoader implements CommandLineRunner {
         container1.setDockerImage("docker.io/me/myApp:latest");
         container1.setExposedPort(8080);
         user1.addContainer(container1);
-        System.out.println(container1.toString());
+
+        containerRepository.save(container1);
 
         // Environment Variables
         EnvironmentVariable env1 = new EnvironmentVariable();
         env1.setKey("key");
         env1.setValue("value");
         container1.addEnvironmentVariable(env1);
-        System.out.println(env1.toString());
+
+        environmentVariableRepository.save(env1);
     }
 }
