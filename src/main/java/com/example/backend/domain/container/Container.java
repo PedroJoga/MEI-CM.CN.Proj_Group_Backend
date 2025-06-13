@@ -1,7 +1,9 @@
 package com.example.backend.domain.container;
 
+import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Container {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotNull
+    @Pattern(regexp = "^[a-zA-Z0-9]{3,50}$", message = "ID must be 3-50 alphanumeric characters")
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Long userId;
+    private User user;
 
     @NotNull
     private String name;
@@ -40,7 +43,7 @@ public class Container {
             return;
         }
 
-        environmentVariable.setContainerId(this.id);
+        environmentVariable.setContainer(this);
         environmentVariables.add(environmentVariable);
     }
 }

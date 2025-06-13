@@ -18,7 +18,7 @@ build:
 	mvn clean package -DskipTests
 
 build-image:
-	docker-compose build
+	docker compose build
 
 deploy: build build-image up
 

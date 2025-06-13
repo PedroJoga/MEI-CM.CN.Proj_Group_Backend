@@ -10,8 +10,8 @@ public class EncryptionService {
     private final TextEncryptor encryptor;
 
     public EncryptionService(
-            @Value("${app.encryption.password}") String password,
-            @Value("${app.encryption.salt}") String salt)
+            @Value("${api.encryption.password}") String password,
+            @Value("${api.encryption.salt}") String salt)
     {
         this.encryptor = Encryptors.text(password, salt);
     }

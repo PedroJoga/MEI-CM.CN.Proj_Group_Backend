@@ -49,4 +49,13 @@ public class User {
         response.setUser(this);
         this.responses.add(response);
     }
+
+    public void addContainer(Container container) {
+        if (container == null) {
+            return;
+        }
+
+        container.setUser(this);
+        containers.add(container);
+    }
 }
