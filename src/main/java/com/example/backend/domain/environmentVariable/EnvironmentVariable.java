@@ -1,5 +1,6 @@
-package com.example.backend.domain.container;
+package com.example.backend.domain.environmentVariable;
 
+import com.example.backend.domain.container.Container;
 import com.example.backend.infra.security.EncryptedStringConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

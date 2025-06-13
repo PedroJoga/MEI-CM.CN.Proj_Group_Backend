@@ -1,5 +1,6 @@
 package com.example.backend.domain.container;
 
+import com.example.backend.domain.environmentVariable.EnvironmentVariable;
 import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
