@@ -33,3 +33,11 @@ logs:
 
 monitor: deploy logs
 
+build-image-amd64:
+	docker buildx build --platform linux/amd64 -t ${DOCKER_HUB_USER}/cc-proj-group-backend .
+
+push-image:
+	docker push ${DOCKER_HUB_USER}/cc-proj-group-backend
+
+push: build build-image-amd64 push-image
+
