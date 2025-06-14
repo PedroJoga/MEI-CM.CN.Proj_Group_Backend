@@ -23,7 +23,6 @@ public class EnvironmentVariable {
 
     @ManyToOne
     @JoinColumn(name = "container_id", nullable = false)
-    @Pattern(regexp = "^[a-zA-Z0-9]{3,50}$", message = "ID must be 3-50 alphanumeric characters")
     private Container container;
 
     @NotNull

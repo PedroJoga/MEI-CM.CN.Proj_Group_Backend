@@ -3,6 +3,7 @@ package com.example.backend.domain.container;
 import com.example.backend.domain.environmentVariable.EnvironmentVariable;
 import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -21,18 +22,25 @@ import java.util.List;
 @AllArgsConstructor
 public class Container {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotNull
+    @NotBlank
+    @Column(unique=true)
     @Pattern(regexp = "^[a-zA-Z0-9]{3,50}$", message = "ID must be 3-50 alphanumeric characters")
-    private String id;
+    private String subDomain;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
+    @NotBlank
     private String name;
 
     @NotNull
+    @NotBlank
     private String dockerImage;
 
     private int exposedPort;

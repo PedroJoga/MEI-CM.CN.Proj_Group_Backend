@@ -1,9 +1,7 @@
 package com.example.backend.dataseed;
 
-import com.example.backend.domain.comment.Comment;
 import com.example.backend.domain.container.Container;
 import com.example.backend.domain.environmentVariable.EnvironmentVariable;
-import com.example.backend.domain.response.Response;
 import com.example.backend.domain.user.User;
 import com.example.backend.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +56,7 @@ public class DataLoader implements CommandLineRunner {
         // Containers
         Container container1 = new Container();
         container1.setName("My App");
-        container1.setId("myApp1");
+        container1.setSubDomain("myApp1");
         container1.setDockerImage("docker.io/me/myApp:latest");
         container1.setExposedPort(8080);
         user1.addContainer(container1);
