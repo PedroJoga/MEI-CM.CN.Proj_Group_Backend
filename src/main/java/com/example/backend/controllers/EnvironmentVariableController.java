@@ -31,15 +31,22 @@ public class EnvironmentVariableController {
     @GetMapping("/container/{containerId}")
     public ResponseEntity<List<EnvironmentVariableResponseDTO>> getEnvironmentVariablesByContainer(Authentication authentication, @PathVariable Long containerId) {
         User user = (User) authentication.getPrincipal();
-        List<EnvironmentVariableResponseDTO> responses = environmentVariableService.getEnvironmentVariablesByContainer(user, containerId);
-        return ResponseEntity.ok(responses);
+        List<EnvironmentVariableResponseDTO> environmentVariables = environmentVariableService.getEnvironmentVariablesByContainer(user, containerId);
+        return ResponseEntity.ok(environmentVariables);
     }
 
-    @PutMapping("/{environmentvariableId}")
-    public ResponseEntity<EnvironmentVariableResponseDTO> editEnvironmentVariablesById(Authentication authentication, @PathVariable Long environmentvariableId, EnvironmentVariableRequestDTO body) {
+    @PutMapping("/{environmentVariableId}")
+    public ResponseEntity<EnvironmentVariableResponseDTO> editEnvironmentVariableById(Authentication authentication, @PathVariable Long environmentVariableId, EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        EnvironmentVariableResponseDTO responseDTO = environmentVariableService.editEnvironmentVariablesById(user, body.key(), body.value(), environmentvariableId);
-        return ResponseEntity.ok(responseDTO);
+        EnvironmentVariableResponseDTO environmentVariable = environmentVariableService.editEnvironmentVariablesById(user, body.key(), body.value(), environmentVariableId);
+        return ResponseEntity.ok(environmentVariable);
+    }
+
+    @DeleteMapping("/{environmentVariableId}")
+    public ResponseEntity<Void> deleteEnvironmentVariableById(Authentication authentication, @PathVariable Long environmentVariableId) {
+        User user = (User) authentication.getPrincipal();
+        environmentVariableService.deleteEnvironmentVariableById(user, environmentVariableId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

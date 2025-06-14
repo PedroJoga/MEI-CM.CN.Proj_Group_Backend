@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.domain.container.Container;
 import com.example.backend.domain.environmentVariable.EnvironmentVariable;
 import com.example.backend.domain.user.User;
+import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.dto.EnvironmentVariableResponseDTO;
 import com.example.backend.repositories.ContainerRepository;
 import com.example.backend.repositories.EnvironmentVariableRepository;
@@ -52,5 +53,34 @@ public class EnvironmentVariableService {
                         environmentVariable.getKey(),
                         environmentVariable.getValue()))
                 .collect(Collectors.toList());
+    }
+
+    public EnvironmentVariableResponseDTO editEnvironmentVariablesById(User user, String key, String value, Long environmentVariableId) {
+        EnvironmentVariable environmentVariable = environmentVariableRepository.findById(environmentVariableId)
+                .orElseThrow(() -> new RuntimeException("Environment variable not found"));
+
+        if (!Objects.equals(environmentVariable.getContainer().getUser().getId(), user.getId())) {
+            throw new RuntimeException("Environment variable does not belong to the user");
+        }
+
+        environmentVariable.setKey(key);
+        environmentVariable.setValue(value);
+
+        return new EnvironmentVariableResponseDTO(
+                environmentVariableId,
+                environmentVariable.getKey(),
+                environmentVariable.getValue()
+        );
+    }
+
+    public void deleteEnvironmentVariableById(User user, Long environmentVariableId) {
+        EnvironmentVariable environmentVariable = environmentVariableRepository.findById(environmentVariableId)
+                .orElseThrow(() -> new RuntimeException("Environment variable not found"));
+
+        if (!Objects.equals(environmentVariable.getContainer().getUser().getId(), user.getId())) {
+            throw new RuntimeException("Environment variable does not belong to the user");
+        }
+
+        environmentVariableRepository.deleteById(environmentVariableId);
     }
 }
