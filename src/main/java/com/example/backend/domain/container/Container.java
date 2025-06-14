@@ -52,8 +52,16 @@ public class Container {
         if (environmentVariable == null) {
             return;
         }
-
+        this.environmentVariables.add(environmentVariable);
         environmentVariable.setContainer(this);
-        environmentVariables.add(environmentVariable);
     }
+
+    public void removeEnvironmentVariable(EnvironmentVariable environmentVariable) {
+        if (environmentVariable == null) {
+            return;
+        }
+        this.environmentVariables.remove(environmentVariable);
+        environmentVariable.setContainer(null);
+    }
+
 }

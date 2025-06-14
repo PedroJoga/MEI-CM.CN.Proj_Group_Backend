@@ -31,9 +31,10 @@ public class EnvironmentVariableService {
         }
 
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
-        environmentVariable.setContainer(container);
         environmentVariable.setKey(key);
         environmentVariable.setValue(value);
+
+        container.addEnvironmentVariable(environmentVariable);
 
         environmentVariableRepository.save(environmentVariable);
     }
@@ -81,6 +82,8 @@ public class EnvironmentVariableService {
             throw new RuntimeException("Environment variable does not belong to the user");
         }
 
-        environmentVariableRepository.deleteById(environmentVariableId);
+        environmentVariable.getContainer().removeEnvironmentVariable(environmentVariable);
+
+        //environmentVariableRepository.delete(environmentVariable); // não é necessário por causa ```orphanRemoval = true```
     }
 }

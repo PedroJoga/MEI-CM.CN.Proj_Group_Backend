@@ -38,8 +38,16 @@ public class User {
         if (container == null) {
             return;
         }
-
+        this.containers.add(container);
         container.setUser(this);
-        containers.add(container);
+
+    }
+
+    public void removeContainer(Container container) {
+        if (container == null) {
+            return;
+        }
+        this.containers.remove(container);
+        container.setUser(null);
     }
 }

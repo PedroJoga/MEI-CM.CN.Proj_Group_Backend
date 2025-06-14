@@ -22,11 +22,12 @@ public class ContainerService {
     public void addContainer(User user, String subDomain, String name, String dockerImage, int exposedPort) {
 
         Container container = new Container();
-        container.setUser(user);
         container.setSubDomain(subDomain);
         container.setName(name);
         container.setDockerImage(dockerImage);
         container.setExposedPort(exposedPort);
+
+        user.addContainer(container);
 
         containerRepository.save(container);
     }
@@ -74,6 +75,8 @@ public class ContainerService {
             throw new RuntimeException("Container does not belong to the user");
         }
 
-        containerRepository.deleteById(containerId);
+        user.removeContainer(container);
+
+        // containerRepository.delete(container); // não é necessário por causa ```orphanRemoval = true```
     }
 }
