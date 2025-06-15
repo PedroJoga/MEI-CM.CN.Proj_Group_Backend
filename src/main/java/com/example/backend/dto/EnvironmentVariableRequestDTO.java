@@ -1,4 +1,4 @@
 package com.example.backend.dto;
 
-public record EnvironmentVariableRequestDTO(Long containerId, String key, String value) {
+public record EnvironmentVariableRequestDTO(String key, String value) {
 }
