@@ -36,6 +36,7 @@ public class ContainerController {
     public ResponseEntity<ContainerResponseDTO> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
         ContainerResponseDTO containerDTO = containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
+        kubernetesService.addContainer(containerDTO);
         return ResponseEntity.ok(containerDTO);
     }
 

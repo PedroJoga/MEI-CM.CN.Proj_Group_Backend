@@ -26,3 +26,8 @@ clean:
 	kubectl delete -f backend/
 	kubectl delete -f service-accounts/
 	kubectl delete -f ingress.yaml
+
+clean-backend:
+	kubectl delete -f backend/
+
+deploy: clean-backend deploy-backend ingress
