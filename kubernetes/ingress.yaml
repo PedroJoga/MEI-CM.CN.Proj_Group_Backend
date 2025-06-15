@@ -4,7 +4,7 @@ metadata:
   name: group4-project-ingress
 spec:
   rules:
-    - host: pj-172.22.21.101.sslip.io
+    - host: containercraft.duckdns.org
       http:
         paths:
         - path: /
