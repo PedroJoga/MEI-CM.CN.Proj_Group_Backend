@@ -22,10 +22,10 @@ public class EnvironmentVariableController {
     @Autowired
     private EnvironmentVariableService environmentVariableService;
 
-    @PostMapping("")
-    public ResponseEntity<EnvironmentVariableResponseDTO> addEnvironmentVariable(Authentication authentication, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
+    @PostMapping("/container/{containerId}")
+    public ResponseEntity<EnvironmentVariableResponseDTO> addEnvironmentVariable(Authentication authentication, @PathVariable Long containerId, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        EnvironmentVariableResponseDTO environmentVariableDTO = environmentVariableService.addEnvironmentVariable(user, body.containerId(), body.key(), body.value());
+        EnvironmentVariableResponseDTO environmentVariableDTO = environmentVariableService.addEnvironmentVariable(user, containerId, body.key(), body.value());
         return ResponseEntity.ok(environmentVariableDTO);
     }
 
