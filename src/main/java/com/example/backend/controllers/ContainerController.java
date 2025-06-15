@@ -22,10 +22,10 @@ public class ContainerController {
     private ContainerService containerService;
 
     @PostMapping("")
-    public ResponseEntity<Void> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
+    public ResponseEntity<ContainerResponseDTO> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        ContainerResponseDTO containerDTO = containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
+        return ResponseEntity.ok(containerDTO);
     }
 
     @GetMapping("/user")
@@ -38,8 +38,8 @@ public class ContainerController {
     @PutMapping("/{containerId}")
     public ResponseEntity<ContainerResponseDTO> editContainerById(Authentication authentication, @PathVariable Long containerId, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        ContainerResponseDTO responseDTO = containerService.editContainerById(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort(), containerId);
-        return ResponseEntity.ok(responseDTO);
+        ContainerResponseDTO containerDTO = containerService.editContainerById(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort(), containerId);
+        return ResponseEntity.ok(containerDTO);
     }
 
     @DeleteMapping("/{containerId}")

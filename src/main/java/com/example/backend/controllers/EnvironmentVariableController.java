@@ -25,8 +25,8 @@ public class EnvironmentVariableController {
     @PostMapping("")
     public ResponseEntity<Void> addEnvironmentVariable(Authentication authentication, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        environmentVariableService.addEnvironmentVariable(user, body.containerId(), body.key(), body.value());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        EnvironmentVariableResponseDTO environmentVariableDTO = environmentVariableService.addEnvironmentVariable(user, body.containerId(), body.key(), body.value());
+        return ResponseEntity.ok(environmentVariableDTO);
     }
 
     @GetMapping("/container/{containerId}")
@@ -39,8 +39,8 @@ public class EnvironmentVariableController {
     @PutMapping("/{environmentVariableId}")
     public ResponseEntity<EnvironmentVariableResponseDTO> editEnvironmentVariableById(Authentication authentication, @PathVariable Long environmentVariableId, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        EnvironmentVariableResponseDTO environmentVariable = environmentVariableService.editEnvironmentVariablesById(user, body.key(), body.value(), environmentVariableId);
-        return ResponseEntity.ok(environmentVariable);
+        EnvironmentVariableResponseDTO environmentVariableDTO = environmentVariableService.editEnvironmentVariablesById(user, body.key(), body.value(), environmentVariableId);
+        return ResponseEntity.ok(environmentVariableDTO);
     }
 
     @DeleteMapping("/{environmentVariableId}")
