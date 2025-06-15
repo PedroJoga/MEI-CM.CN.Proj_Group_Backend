@@ -35,7 +35,8 @@ public class ContainerController {
     @PostMapping("")
     public ResponseEntity<Void> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
+        Container createdContainer = containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
+        kubernetesService.addContainer(createdContainer);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

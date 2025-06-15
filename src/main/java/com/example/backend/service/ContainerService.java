@@ -20,7 +20,7 @@ public class ContainerService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addContainer(Long userId, String subDomain, String name, String dockerImage, int exposedPort) {
+    public Container addContainer(Long userId, String subDomain, String name, String dockerImage, int exposedPort) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -33,6 +33,8 @@ public class ContainerService {
         user.addContainer(container);
 
         containerRepository.save(container);
+
+        return container;
     }
 
     public List<ContainerResponseDTO> getContainersByUser(User user) {
