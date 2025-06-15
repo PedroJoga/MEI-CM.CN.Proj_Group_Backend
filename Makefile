@@ -41,5 +41,9 @@ push-image:
 
 push: build build-image-amd64 push-image
 
-up-minikube:
+up-minikube: build
+	minikube image build -t minikube-backend .
+	make -C kubernetes/ deploy
 
+push-and-cluster: push
+	make -C kubernetes/ deploy

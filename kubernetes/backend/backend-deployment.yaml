@@ -15,7 +15,8 @@ spec:
       serviceAccountName: api-service-account
       containers:
         - name: backend-api
-          image: docker.io/2240594/cc-proj-group-backend
+          image: minikube-backend
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env:
