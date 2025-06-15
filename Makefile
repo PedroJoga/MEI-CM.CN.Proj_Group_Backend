@@ -43,7 +43,12 @@ push: build build-image-amd64 push-image
 
 up-minikube: build
 	minikube image build -t minikube-backend .
+	minikube image build -t minikube-frontend ${FRONTEND_FILE_PATH}
 	make -C kubernetes/ deploy
 
-push-and-cluster: push
+up-minikube-backend: build
+	minikube image build -t minikube-backend .
+	make -C kubernetes/ deploy-backend
+
+up-push: push
 	make -C kubernetes/ deploy

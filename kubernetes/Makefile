@@ -4,20 +4,20 @@ config:
 	kubectl apply -f configmaps/
 	kubectl apply -f secrets/
 
-deploy-database: config
+database: config
 	kubectl apply -f postgres/
 
-deploy-backend: config
+backend: config
 	kubectl apply -f service-accounts/
 	kubectl apply -f backend/
 
-deploy-frontend:
+frontend:
 	kubectl apply -f frontend/
 
 ingress:
 	kubectl apply -f ingress.yaml
 
-up: deploy-database deploy-backend deploy-frontend ingress
+up: database backend frontend ingress
 
 clean:
 	kubectl delete -f configmaps/
@@ -25,9 +25,15 @@ clean:
 	kubectl delete -f postgres/
 	kubectl delete -f backend/
 	kubectl delete -f service-accounts/
+	kubectl delete -f frontend/
 	kubectl delete -f ingress.yaml
 
 clean-backend:
 	kubectl delete -f backend/
 
-deploy: clean-backend deploy-backend ingress
+clean-frontend:
+	kubectl delete -f frontend/
+
+deploy: clean-backend clean-frontend backend frontend ingress
+
+deploy-backend: clean-backend backend ingress
