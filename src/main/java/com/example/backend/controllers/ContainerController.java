@@ -5,6 +5,7 @@ import com.example.backend.domain.user.User;
 import com.example.backend.dto.ContainerRequestDTO;
 import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.service.ContainerService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,9 @@ public class ContainerController {
     private ContainerService containerService;
 
     @PostMapping("")
-    public ResponseEntity<Void> addContainer(Authentication authentication, ContainerRequestDTO body) {
+    public ResponseEntity<Void> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        containerService.addContainer(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
+        containerService.addContainer(user.getId(), body.subDomain(), body.name(), body.dockerImage(), body.exposedPort());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -35,7 +36,7 @@ public class ContainerController {
     }
 
     @PutMapping("/{containerId}")
-    public ResponseEntity<ContainerResponseDTO> editContainerById(Authentication authentication, @PathVariable Long containerId, ContainerRequestDTO body) {
+    public ResponseEntity<ContainerResponseDTO> editContainerById(Authentication authentication, @PathVariable Long containerId, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
         ContainerResponseDTO responseDTO = containerService.editContainerById(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort(), containerId);
         return ResponseEntity.ok(responseDTO);
@@ -44,7 +45,7 @@ public class ContainerController {
     @DeleteMapping("/{containerId}")
     public ResponseEntity<Void> deleteContainerById(Authentication authentication, @PathVariable Long containerId) {
         User user = (User) authentication.getPrincipal();
-        containerService.deleteContainerById(user, containerId);
+        containerService.deleteContainerById(user.getId(), containerId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

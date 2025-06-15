@@ -67,6 +67,8 @@ public class EnvironmentVariableService {
         environmentVariable.setKey(key);
         environmentVariable.setValue(value);
 
+        environmentVariableRepository.save(environmentVariable);
+
         return new EnvironmentVariableResponseDTO(
                 environmentVariableId,
                 environmentVariable.getKey(),
@@ -84,6 +86,6 @@ public class EnvironmentVariableService {
 
         environmentVariable.getContainer().removeEnvironmentVariable(environmentVariable);
 
-        //environmentVariableRepository.delete(environmentVariable); // não é necessário por causa ```orphanRemoval = true```
+        environmentVariableRepository.delete(environmentVariable);
     }
 }

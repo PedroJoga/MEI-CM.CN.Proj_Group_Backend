@@ -4,7 +4,6 @@ import com.example.backend.domain.container.Container;
 import com.example.backend.domain.user.User;
 import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.repositories.ContainerRepository;
-import com.example.backend.repositories.EnvironmentVariableRepository;
 import com.example.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,12 @@ public class ContainerService {
 
     @Autowired
     private ContainerRepository containerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public void addContainer(User user, String subDomain, String name, String dockerImage, int exposedPort) {
+    public void addContainer(Long userId, String subDomain, String name, String dockerImage, int exposedPort) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Container container = new Container();
         container.setSubDomain(subDomain);
@@ -58,6 +61,8 @@ public class ContainerService {
         container.setDockerImage(dockerImage);
         container.setExposedPort(exposedPort);
 
+        containerRepository.save(container);
+
         return new ContainerResponseDTO(
                 containerId,
                 container.getSubDomain(),
@@ -67,7 +72,10 @@ public class ContainerService {
         );
     }
 
-    public void deleteContainerById(User user, Long containerId) {
+    public void deleteContainerById(Long userId, Long containerId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Container container = containerRepository.findById(containerId)
                 .orElseThrow(() -> new RuntimeException("Container not found"));
 
@@ -77,6 +85,6 @@ public class ContainerService {
 
         user.removeContainer(container);
 
-        // containerRepository.delete(container); // não é necessário por causa ```orphanRemoval = true```
+        containerRepository.delete(container);
     }
 }
