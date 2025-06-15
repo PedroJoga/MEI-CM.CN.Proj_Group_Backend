@@ -18,7 +18,7 @@ build:
 	mvn clean package -DskipTests
 
 build-image:
-	docker compose build
+	docker build -t ${DOCKER_HUB_USER}/cc-proj-group-backend .
 
 deploy: build build-image up
 
@@ -40,4 +40,3 @@ push-image:
 	docker push ${DOCKER_HUB_USER}/cc-proj-group-backend
 
 push: build build-image-amd64 push-image
-

@@ -5,6 +5,9 @@ import com.example.backend.domain.user.User;
 import com.example.backend.dto.ContainerRequestDTO;
 import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.service.ContainerService;
+import com.example.backend.service.KubernetesService;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.apps.DeploymentList;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,14 @@ public class ContainerController {
 
     @Autowired
     private ContainerService containerService;
+
+    @Autowired
+    private KubernetesService kubernetesService;
+
+    @GetMapping("/k8s")
+    public ResponseEntity<DeploymentList> getPods() {
+        return ResponseEntity.ok(kubernetesService.getPods());
+    }
 
     @PostMapping("")
     public ResponseEntity<ContainerResponseDTO> addContainer(Authentication authentication, @RequestBody @Valid ContainerRequestDTO body) {
