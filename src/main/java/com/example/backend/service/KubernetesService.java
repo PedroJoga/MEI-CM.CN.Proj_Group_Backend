@@ -4,6 +4,7 @@ import com.example.backend.domain.container.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
+import io.fabric8.kubernetes.api.model.apps.DeploymentList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,8 @@ public class KubernetesService {
     @Value("${k8s.namespace}")
     private String namespace;
 
-    public List<Pod> getPods() {
-        return client.pods().inAnyNamespace().list().getItems();
+    public DeploymentList getPods() {
+        return client.apps().deployments().list();
     }
 
     public void addContainer(Container container) {
