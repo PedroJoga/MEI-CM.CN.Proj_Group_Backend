@@ -16,6 +16,7 @@ spec:
       containers:
         - name: backend-api
           image: docker.io/2240594/cc-proj-group-backend
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

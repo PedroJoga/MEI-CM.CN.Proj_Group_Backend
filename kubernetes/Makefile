@@ -11,10 +11,13 @@ deploy-backend: config
 	kubectl apply -f service-accounts/
 	kubectl apply -f backend/
 
+deploy-frontend:
+	kubectl apply -f frontend/
+
 ingress:
 	kubectl apply -f ingress.yaml
 
-up: deploy-database deploy-backend ingress
+up: deploy-database deploy-backend deploy-frontend ingress
 
 clean:
 	kubectl delete -f configmaps/
