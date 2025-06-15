@@ -6,6 +6,7 @@ import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.dto.EnvironmentVariableRequestDTO;
 import com.example.backend.dto.EnvironmentVariableResponseDTO;
 import com.example.backend.service.EnvironmentVariableService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class EnvironmentVariableController {
     private EnvironmentVariableService environmentVariableService;
 
     @PostMapping("")
-    public ResponseEntity<Void> addEnvironmentVariable(Authentication authentication, EnvironmentVariableRequestDTO body) {
+    public ResponseEntity<Void> addEnvironmentVariable(Authentication authentication, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
         environmentVariableService.addEnvironmentVariable(user, body.containerId(), body.key(), body.value());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -36,7 +37,7 @@ public class EnvironmentVariableController {
     }
 
     @PutMapping("/{environmentVariableId}")
-    public ResponseEntity<EnvironmentVariableResponseDTO> editEnvironmentVariableById(Authentication authentication, @PathVariable Long environmentVariableId, EnvironmentVariableRequestDTO body) {
+    public ResponseEntity<EnvironmentVariableResponseDTO> editEnvironmentVariableById(Authentication authentication, @PathVariable Long environmentVariableId, @RequestBody @Valid EnvironmentVariableRequestDTO body) {
         User user = (User) authentication.getPrincipal();
         EnvironmentVariableResponseDTO environmentVariable = environmentVariableService.editEnvironmentVariablesById(user, body.key(), body.value(), environmentVariableId);
         return ResponseEntity.ok(environmentVariable);
