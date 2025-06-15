@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-configmap
+data:
+  DOCKER_HUB_USER: "2240594"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/db"

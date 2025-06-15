@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend-api
+          image: docker.io/2240594/cc-proj-group-backend
+          ports:
+            - containerPort: 8080
+          env:
+            - name: API_ENCRYPTION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: API_ENCRYPTION_PASSWORD
+            - name: API_ENCRYPTION_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: API_ENCRYPTION_SALT
+            - name: API_SECURITY_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: API_SECURITY_TOKEN_SECRET
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configmap
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_DATASOURCE_USERNAME

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: group4-project-ingress
+spec:
+  rules:
+    - host: pj-172.22.21.101.sslip.io
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: backend-service
+              port:
+                number: 8080
