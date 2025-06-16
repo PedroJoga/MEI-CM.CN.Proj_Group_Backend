@@ -28,3 +28,26 @@ The apps can be accessed here:
 - The `containercraft.duckdns.org` is currently poiting to the school's cluster IP (172.22.21.101)
 - There's a `bruno/` directory with sample HTTP requests for common CRUD operations with the API
 - Repository for this code: [Github PedroJoga/MEI-CM.CN.Proj_Group_Backend](https://github.com/PedroJoga/MEI-CM.CN.Proj_Group_Backend)
+
+
+# ContainerCraft
+
+## 📦 Project Setup
+
+## 🚀 How to run
+
+1. **Copy the `.env` file**:
+
+```bash
+cp .env.example .env
+```
+
+Change the API URL in `.env` if needed
+
+2. **Deploy the project**:
+
+```bash
+make deploy
+```
+
+That's it!
