@@ -5,3 +5,4 @@ metadata:
 data:
   DOCKER_HUB_USER: "2240594"
   SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/db"
+  K8S_NAMESPACE: cc-group-4
