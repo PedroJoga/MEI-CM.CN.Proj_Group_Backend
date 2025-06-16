@@ -95,4 +95,14 @@ public class ContainerService {
 
         containerRepository.delete(container);
     }
+
+    public boolean subDomainExists(String subDomain) {
+        Container container = containerRepository.findBySubDomain(subDomain);
+        return container != null;
+    }
+
+    public Container getContainerById(Long containerId) {
+        return containerRepository.findById(containerId)
+                .orElseThrow(() -> new RuntimeException("Container not found"));
+    }
 }

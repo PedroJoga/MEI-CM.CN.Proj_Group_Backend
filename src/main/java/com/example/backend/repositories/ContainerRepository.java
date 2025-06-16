@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ContainerRepository extends JpaRepository<Container, Long> {
     List<Container> findByUser(User user);
+    Container findBySubDomain(String subDomain);
 }

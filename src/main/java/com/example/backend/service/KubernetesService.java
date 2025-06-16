@@ -25,6 +25,9 @@ public class KubernetesService {
     @Value("${k8s.namespace}")
     private String namespace;
 
+    @Autowired
+    private ContainerService containerService;
+
     public DeploymentList getPods() {
         return client.apps().deployments().list();
     }
@@ -33,6 +36,23 @@ public class KubernetesService {
         createDeployment(container.subDomain(), container.dockerImage(), container.exposedPort());
         createService(container.subDomain(), container.exposedPort());
         createIngress(container.subDomain(), container.exposedPort());
+    }
+
+    public void updateContainer(String oldSubDomain, ContainerResponseDTO container) {
+        deleteContainer(oldSubDomain);
+        addContainer(container);
+    }
+
+    public void deleteContainer(String subDomain) {
+        if (containerService.subDomainExists(subDomain)) {
+            deleteDeployment(subDomain);
+            deleteService(subDomain);
+            deleteIngress(subDomain);
+        }
+    }
+
+    public void getStatus(String subDomain) {
+        // TODO
     }
 
     public void createDeployment(String name, String image, int port) {
@@ -112,5 +132,77 @@ public class KubernetesService {
                 .build();
 
         client.network().v1().ingresses().create(ingress);
+    }
+
+    private void deleteDeployment(String subDomain) {
+        String deploymentName = subDomain + "-deployment";
+        System.out.println("Attempting to delete deployment: " + deploymentName + " in namespace: " + namespace);
+
+        Deployment existing = client.apps().deployments()
+                .inNamespace(namespace)
+                .withName(deploymentName)
+                .get();
+
+        if (existing != null) {
+            System.out.println("Found deployment: " + deploymentName + ", proceeding with deletion");
+            List<io.fabric8.kubernetes.api.model.StatusDetails> result = client.apps().deployments()
+                    .inNamespace(namespace)
+                    .withName(deploymentName)
+                    .delete();
+            System.out.println("Deployment deletion result: " + (result != null && !result.isEmpty() ? "Success" : "Failed"));
+            if (result != null) {
+                result.forEach(status -> System.out.println("Status: " + status.getName() + " - " + status.getKind()));
+            }
+        } else {
+            System.out.println("Deployment " + deploymentName + " not found");
+        }
+    }
+
+    private void deleteService(String subDomain) {
+        String serviceName = subDomain + "-service";
+        System.out.println("Attempting to delete service: " + serviceName + " in namespace: " + namespace);
+
+        io.fabric8.kubernetes.api.model.Service existing = client.services()
+                .inNamespace(namespace)
+                .withName(serviceName)
+                .get();
+
+        if (existing != null) {
+            System.out.println("Found service: " + serviceName + ", proceeding with deletion");
+            List<io.fabric8.kubernetes.api.model.StatusDetails> result = client.services()
+                    .inNamespace(namespace)
+                    .withName(serviceName)
+                    .delete();
+            System.out.println("Service deletion result: " + (result != null && !result.isEmpty() ? "Success" : "Failed"));
+            if (result != null) {
+                result.forEach(status -> System.out.println("Status: " + status.getName() + " - " + status.getKind()));
+            }
+        } else {
+            System.out.println("Service " + serviceName + " not found");
+        }
+    }
+
+    private void deleteIngress(String subDomain) {
+        String ingressName = subDomain + "-ingress";
+        System.out.println("Attempting to delete ingress: " + ingressName + " in namespace: " + namespace);
+
+        Ingress existing = client.network().v1().ingresses()
+                .inNamespace(namespace)
+                .withName(ingressName)
+                .get();
+
+        if (existing != null) {
+            System.out.println("Found ingress: " + ingressName + ", proceeding with deletion");
+            List<io.fabric8.kubernetes.api.model.StatusDetails> result = client.network().v1().ingresses()
+                    .inNamespace(namespace)
+                    .withName(ingressName)
+                    .delete();
+            System.out.println("Ingress deletion result: " + (result != null && !result.isEmpty() ? "Success" : "Failed"));
+            if (result != null) {
+                result.forEach(status -> System.out.println("Status: " + status.getName() + " - " + status.getKind()));
+            }
+        } else {
+            System.out.println("Ingress " + ingressName + " not found");
+        }
     }
 }

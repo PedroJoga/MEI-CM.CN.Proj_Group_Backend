@@ -50,13 +50,18 @@ public class ContainerController {
     @PutMapping("/{containerId}")
     public ResponseEntity<ContainerResponseDTO> editContainerById(Authentication authentication, @PathVariable Long containerId, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
+        Container container = containerService.getContainerById(containerId);
+        String oldSubDomain = container.getSubDomain();
         ContainerResponseDTO containerDTO = containerService.editContainerById(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort(), containerId);
+        kubernetesService.updateContainer(oldSubDomain, containerDTO);
         return ResponseEntity.ok(containerDTO);
     }
 
     @DeleteMapping("/{containerId}")
     public ResponseEntity<Void> deleteContainerById(Authentication authentication, @PathVariable Long containerId) {
         User user = (User) authentication.getPrincipal();
+        Container container = containerService.getContainerById(containerId);
+        kubernetesService.deleteContainer(container.getSubDomain());
         containerService.deleteContainerById(user.getId(), containerId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
