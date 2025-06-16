@@ -93,4 +93,9 @@ public class EnvironmentVariableService {
 
         environmentVariableRepository.delete(environmentVariable);
     }
+
+    public EnvironmentVariable getEnvironmentVariableById(Long environmentVariableId) {
+        return environmentVariableRepository.findById(environmentVariableId)
+                .orElseThrow(() -> new RuntimeException("Environment variable not found"));
+    }
 }

@@ -239,4 +239,11 @@ public class KubernetesService {
             System.out.println("Secret " + secretName + " not found");
         }
     }
+
+    public void updateDeployment(Long containerId) {
+        Container container = containerService.getContainerById(containerId);
+        deleteDeployment(container.getSubDomain());
+        deleteSecret(container.getSubDomain());
+        createDeployment(container.getSubDomain(), container.getDockerImage(), container.getExposedPort(), container.getEnvironmentVariables());
+    }
 }
