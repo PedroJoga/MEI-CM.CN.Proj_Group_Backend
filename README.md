@@ -18,8 +18,6 @@ To get the project running in a cluster:
 - Run `make up-cluster`
     - If there are any errors, the `kubernetes/` folder has another makefile to setup specific k8s resources.
 
-
-
 The apps can be accessed here:
 - [Frontend](http://containercraft.duckdns.org)
 - [Backend](http://api.containercraft.duckdns.org)
@@ -46,13 +44,18 @@ cp .env.example .env
 
 Change the DOCKER_HUB_USER in `.env` for your docker hub username
 
-3. **Push backend image to docker hub**:
+Change the FRONTEND_FILE_PATH in `.env` for your [Frontend](https://github.com/PedroJoga/MEI-CM.CN.Proj_Group_Frontend) path
+
+3. **Change for your frontend image in [frontend-deployment](./kubernetes/frontend/frontend-deployment.yaml)**:
+
+4. **Change for your backend image in [backend-deployment](./kubernetes/backend/backend-deployment.yaml)**:
+
+5. **Deploy to kubernetes cluster**:
 
 NOTE: you will need Java and maven to compile backend
 
 ```bash
-make push
+make up-push
 ```
-
 
 That's it!
