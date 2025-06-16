@@ -3,12 +3,17 @@ package com.example.backend.dataseed;
 import com.example.backend.domain.container.Container;
 import com.example.backend.domain.environmentVariable.EnvironmentVariable;
 import com.example.backend.domain.user.User;
+import com.example.backend.dto.ContainerResponseDTO;
 import com.example.backend.repositories.*;
+import com.example.backend.service.KubernetesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +25,15 @@ public class DataLoader implements CommandLineRunner {
     ContainerRepository containerRepository;
     @Autowired
     EnvironmentVariableRepository environmentVariableRepository;
+    @Autowired
+    KubernetesService kubernetesService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
         loadData();
+        startSavedContainers();
     }
 
     private void loadData() {
@@ -55,31 +63,13 @@ public class DataLoader implements CommandLineRunner {
 
         // Containers
         Container container1 = new Container();
-        container1.setSubDomain("backend");
+        container1.setSubDomain("pedroapp");
         container1.setName("Backend app");
-        container1.setDockerImage("docker.io/me/backend:latest");
-        container1.setExposedPort(8080);
+        container1.setDockerImage("docker.io/nginx");
+        container1.setExposedPort(80);
         user1.addContainer(container1);
 
         containerRepository.save(container1);
-
-        Container container2 = new Container();
-        container2.setName("Frontend app");
-        container2.setSubDomain("frontend");
-        container2.setDockerImage("docker.io/me/frontend:latest");
-        container2.setExposedPort(3000);
-        user1.addContainer(container2);
-
-        containerRepository.save(container2);
-
-        Container container3 = new Container();
-        container3.setName("Database app");
-        container3.setSubDomain("postgres");
-        container3.setDockerImage("docker.io/me/postgres:latest");
-        container3.setExposedPort(3000);
-        user1.addContainer(container3);
-
-        containerRepository.save(container3);
 
         // Environment Variables
         EnvironmentVariable env1 = new EnvironmentVariable();
@@ -88,5 +78,26 @@ public class DataLoader implements CommandLineRunner {
         container1.addEnvironmentVariable(env1);
 
         environmentVariableRepository.save(env1);
+    }
+
+    @Transactional(readOnly = true)
+    private void startSavedContainers() {
+        // Auto start containers on API startup
+        List<Container> containers = containerRepository.findAll();
+        for (Container container: containers) {
+            try {
+                kubernetesService.addContainer(new ContainerResponseDTO(
+                        container.getId(),
+                        container.getSubDomain(),
+                        container.getName(),
+                        container.getDockerImage(),
+                        container.getExposedPort()
+                ));
+
+            } catch (Exception e) {
+                System.out.println("ERROR: FAILED TO START CONTAINER: " + e.getMessage());
+                continue;
+            }
+        }
     }
 }

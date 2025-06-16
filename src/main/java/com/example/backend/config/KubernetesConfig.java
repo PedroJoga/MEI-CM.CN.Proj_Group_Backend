@@ -13,7 +13,6 @@ public class KubernetesConfig {
     @Bean
     public KubernetesClient kubernetesClient() {
         Config config = new ConfigBuilder()
-                .withMasterUrl("http://host.docker.internal:8001")
                 .build();
         return new KubernetesClientBuilder().withConfig(config).build();
     }

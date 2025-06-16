@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.domain.container.Container;
 import com.example.backend.domain.environmentVariable.EnvironmentVariable;
 import com.example.backend.dto.ContainerResponseDTO;
+import com.example.backend.dto.EnvironmentVariableRequestDTO;
+import com.example.backend.dto.EnvironmentVariableResponseDTO;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
@@ -29,6 +31,8 @@ public class KubernetesService {
 
     @Autowired
     private ContainerService containerService;
+    @Autowired
+    private EnvironmentVariableService environmentVariableService;
 
     public DeploymentList getPods() {
         return client.apps().deployments().list();
@@ -36,8 +40,8 @@ public class KubernetesService {
 
     public void addContainer(ContainerResponseDTO container) {
         Container fullContainer = containerService.getContainerById(container.id());
-        List<EnvironmentVariable> envVars = fullContainer != null ?
-                fullContainer.getEnvironmentVariables() : new ArrayList<>();
+        List<EnvironmentVariableResponseDTO> envVars = fullContainer != null ?
+                environmentVariableService.getEnvironmentVariablesByContainer(fullContainer.getUser(), fullContainer.getId()) : new ArrayList<>();
 
         createDeployment(container.subDomain(), container.dockerImage(), container.exposedPort(), envVars);
         createService(container.subDomain(), container.exposedPort());
@@ -57,7 +61,7 @@ public class KubernetesService {
         // TODO
     }
 
-    public void createDeployment(String name, String image, int port, List<EnvironmentVariable> environmentVariables) {
+    public void createDeployment(String name, String image, int port, List<EnvironmentVariableResponseDTO> environmentVariables) {
         DeploymentBuilder deploymentBuilder = new DeploymentBuilder();
         Deployment deployment = null;
 
@@ -197,12 +201,12 @@ public class KubernetesService {
                 .delete();
     }
 
-    public void createSecret(String name, List<EnvironmentVariable> envVars) {
+    public void createSecret(String name, List<EnvironmentVariableResponseDTO> envVars) {
         Map<String, String> data = new HashMap<>();
 
         // Convert your EnvironmentVariable entities to key-value pairs
-        for (EnvironmentVariable envVar : envVars) {
-            data.put(envVar.getKey(), envVar.getValue());
+        for (EnvironmentVariableResponseDTO envVar : envVars) {
+            data.put(envVar.key(), envVar.value());
         }
 
         Secret secret = new SecretBuilder()
@@ -244,6 +248,6 @@ public class KubernetesService {
         Container container = containerService.getContainerById(containerId);
         deleteDeployment(container.getSubDomain());
         deleteSecret(container.getSubDomain());
-        createDeployment(container.getSubDomain(), container.getDockerImage(), container.getExposedPort(), container.getEnvironmentVariables());
+        createDeployment(container.getSubDomain(), container.getDockerImage(), container.getExposedPort(), environmentVariableService.getEnvironmentVariablesByContainer(container.getUser(), containerId));
     }
 }
