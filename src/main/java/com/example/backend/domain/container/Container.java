@@ -28,7 +28,7 @@ public class Container {
     @NotNull
     @NotBlank
     @Column(unique=true)
-    @Pattern(regexp = "^[a-zA-Z0-9]{3,50}$", message = "Subdomain must be 3-50 alphanumeric characters")
+    @Pattern(regexp = "^[a-z0-9]{3,50}$", message = "Subdomain must be 3-50 lowercase alphanumeric characters")
     private String subDomain;
 
     @ManyToOne
