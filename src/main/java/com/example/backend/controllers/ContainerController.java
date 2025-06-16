@@ -50,10 +50,10 @@ public class ContainerController {
     @PutMapping("/{containerId}")
     public ResponseEntity<ContainerResponseDTO> editContainerById(Authentication authentication, @PathVariable Long containerId, @RequestBody @Valid ContainerRequestDTO body) {
         User user = (User) authentication.getPrincipal();
-        Container container = containerService.getContainerById(containerId);
-        String oldSubDomain = container.getSubDomain();
+        String oldSubDomain = containerService.getContainerById(containerId).getSubDomain();
+        kubernetesService.deleteContainer(oldSubDomain);
         ContainerResponseDTO containerDTO = containerService.editContainerById(user, body.subDomain(), body.name(), body.dockerImage(), body.exposedPort(), containerId);
-        kubernetesService.updateContainer(oldSubDomain, containerDTO);
+        kubernetesService.addContainer(containerDTO);
         return ResponseEntity.ok(containerDTO);
     }
 

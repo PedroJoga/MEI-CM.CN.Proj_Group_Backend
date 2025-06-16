@@ -38,11 +38,6 @@ public class KubernetesService {
         createIngress(container.subDomain(), container.exposedPort());
     }
 
-    public void updateContainer(String oldSubDomain, ContainerResponseDTO container) {
-        deleteContainer(oldSubDomain);
-        addContainer(container);
-    }
-
     public void deleteContainer(String subDomain) {
         if (containerService.subDomainExists(subDomain)) {
             deleteDeployment(subDomain);
