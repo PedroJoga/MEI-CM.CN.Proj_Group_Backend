@@ -34,20 +34,25 @@ The apps can be accessed here:
 
 ## 📦 Project Setup
 
-## 🚀 How to run
+## 🚀 How to run the project in kubernetes
 
-1. **Copy the `.env` file**:
+1. **Prepare [Frontend Image](https://github.com/PedroJoga/MEI-CM.CN.Proj_Group_Frontend)**:
+
+2. **Copy the `.env` file**:
 
 ```bash
 cp .env.example .env
 ```
 
-Change the API URL in `.env` if needed
+Change the DOCKER_HUB_USER in `.env` for your docker hub username
 
-2. **Deploy the project**:
+3. **Push backend image to docker hub**:
+
+NOTE: you will need Java and maven to compile backend
 
 ```bash
-make deploy
+make push
 ```
+
 
 That's it!
